@@ -63,7 +63,7 @@ while ($last_id < $end_id) {
 		my $has_downloads = $decoded_repo_json->{has_downloads};
 		next unless ($has_downloads);
 
-		my $id = null_to_empty_string($one_repo_info->{id});
+		my $id = $one_repo_info->{id};
 		my $name = null_to_empty_string($one_repo_info->{name});
 		my $description = null_to_empty_string($one_repo_info->{description});
 		my $owner = null_to_empty_string($one_repo_info->{owner}->{login});
@@ -78,6 +78,8 @@ while ($last_id < $end_id) {
 		my $created_at = null_to_empty_string($decoded_repo_json->{created_at});
 		my $updated_at = null_to_empty_string($decoded_repo_json->{updated_at});
 		my $pushed_at = null_to_empty_string($decoded_repo_json->{pushed_at});
+		
+		my $clone_url = $decoded_repo_json->{clone_url};
 
 		print INFO "$id\n";
 		print INFO "$name\n";
@@ -92,9 +94,10 @@ while ($last_id < $end_id) {
 		print INFO "$created_at\n";
 		print INFO "$updated_at\n";
 		print INFO "$pushed_at\n";
-		print INFO "\n";
+		print INFO "$clone_url\n";
+		print INFO "-----\n";
 
-		print DOWNLOAD "$repo_url\n";
+		print DOWNLOAD "$clone_url\n";
 
 		$last_id = $one_repo_info->{id};
 	}
