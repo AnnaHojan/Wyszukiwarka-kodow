@@ -11,3 +11,8 @@ Skrypt umo¿liwia jednoczesn¹ pracê na kilku instancjach - wyniki nale¿y ze sob¹ 
 Instalka perla: http://www.activestate.com/activeperl/downloads
 Wymagane jest zainstalowanie programu curl w wersji z ssl obs³uguj¹cej po³¹czenia z https - do repo wrzucona jest wersja 64bit.
 Nale¿y skopiowaæ j¹ do miejsca bêd¹cego w PATH (np. C:\Windows\system32) wraz z do³¹czonym certyfikatem (który mo¿na zainstalowaæ, nie wiem czy jest to wymagane).
+
+
+Konto na githubie, poprzez które mo¿na crawlowaæ i nie pokazywaæ has³a do w³asnego konta:
+login: isifake
+has³o: isifake0
