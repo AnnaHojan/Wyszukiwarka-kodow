@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<schema name="code_search_engine" version="1.2">
+  <types>   
+   <fieldType name="string" class="solr.StrField" sortMissingLast="true" omitNorms="true"/>
+   <fieldType name="long" class="solr.LongField" omitNorms="true"/>
+   <fieldType name="text" class="solr.TextField" positionIncrementGap="100">
+     <analyzer>
+       <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+       <filter class="solr.LowerCaseFilterFactory"/>
+     </analyzer>
+   </fieldType>
+ </types>
+ <fields>
+   <field name="_version_" type="long" indexed="true" stored="true" multiValued="false"/>
+   <field name="nazwa" type="string" indexed="true" stored="true" required="true" />
+   <field name="commit" type="text" indexed="true" stored="true" required="true" />
+   <field name="komentarz" type="text" indexed="true" stored="true" required="true" />
+   <field name="autor" type="string" indexed="true" stored="true" required="true" />
+   <field name="jezyk" type="string" indexed="true" stored="true" required="true" />
+   <field name="kod" type="text" indexed="true" stored="true" required="true" />
+ </fields>
+ <uniqueKey>nazwa</uniqueKey>
+ <defaultSearchField>kod</defaultSearchField>
+ <solrQueryParser defaultOperator="AND"/>
+</schema>
