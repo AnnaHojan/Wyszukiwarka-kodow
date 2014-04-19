@@ -97,7 +97,7 @@ while ($last_id < $end_id) {
 		print INFO "$clone_url\n";
 		print INFO "-----\n";
 
-		print DOWNLOAD "$clone_url\n";
+		print DOWNLOAD "$repo_url\n";
 
 		$last_id = $one_repo_info->{id};
 	}
