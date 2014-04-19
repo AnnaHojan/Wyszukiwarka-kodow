@@ -235,7 +235,7 @@ while ($last_id < $end_id) {
 			}
 			print INFO "\t\t\t<files>\n";
 			for my $file_info (@{$decoded_commit_json->{files}}) {
-				my $file_name = fix_xml(null_to_empty_string($file_info->{filename}));
+				my $file_name = basename(fix_xml(null_to_empty_string($file_info->{filename})));
 				my $diff = fix_xml(null_to_empty_string($file_info->{patch}));
 				print INFO "\t\t\t\t<file>\n";
 				print INFO "\t\t\t\t\t<file_name>$file_name</file_name>\n";
@@ -269,6 +269,7 @@ while ($last_id < $end_id) {
 				my $basename = basename($file);
 				print INFO "\t\t<actual_file>\n";
 				print INFO "\t\t\t<filename>$basename</filename>\n";
+				print INFO "\t\t\t<filename_full>$file</filename_full>\n";
 				print INFO "\t\t\t<content>$content</content>\n";
 				print INFO "\t\t</actual_file>\n";
 			}
