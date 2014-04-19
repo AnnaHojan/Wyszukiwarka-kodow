@@ -1,9 +1,14 @@
 #!/usr/bin/perl
 
+use File::Path qw( rmtree );
+
 use strict;
 use warnings;
 
 use JSON qw( decode_json );
+use FileHandle;
+use File::Find::Rule;
+use File::Basename;
 
 
 sub null_to_empty_string($) {
@@ -23,14 +28,13 @@ my ($user, $password, $last_id, $end_id) = @ARGV;
 
 
 open (INFO, '>>repos_info.xml');
-open (DOWNLOAD, '>>urls_git_clone.txt');
-open (REPO, '>>urls_repo.txt');
 
 while ($last_id < $end_id) {
 
 	print "\n\nAktualne id repozytorium: $last_id\n\n"; 
 	my $repositories_url = "https://api.github.com/repositories?since=$last_id";
-	my $curl_res = `curler.bat "$repositories_url" $user $password 25`;
+	my $curl_res = `curl --insecure -i "$repositories_url" -u $user:$password > temp.txt`;
+	$curl_res = `more +25 temp.txt > curler_output.txt`;
 	die "Nie znaleziono pliku curler.bat" if $? > 0;
 	
 	my $input_file = "curler_output.txt";
@@ -47,8 +51,8 @@ while ($last_id < $end_id) {
 	}
 	while (my $one_repo_info = shift @$decoded_json) {
 		my $repo_url = $one_repo_info->{url};
-		my $curl_res = `curler.bat "$repo_url" $user $password 25`;
-		die "Nie znaleziono pliku curler.bat" if $? > 0;
+		my $curl_res = `curl --insecure -i "$repo_url" -u $user:$password > temp.txt`;
+		$curl_res = `more +25 temp.txt > curler_output.txt`;
 		my $input_repo_file = "curler_output.txt";
 		open( my $input_repo_fh, "<", $input_repo_file ) || die "Can't open $input_repo_file: $!";
 		my $repo_json = join('', <$input_repo_fh>);
@@ -69,14 +73,14 @@ while ($last_id < $end_id) {
 		next if $is_fork;
 		my $size = null_to_empty_string($decoded_repo_json->{size});
 		next if $size > 20480;
-		#my $watchers_count = null_to_empty_string($decoded_repo_json->{watchers_count});
-		#next if $watchers_count < 5;
-		#my $subscribers_count = null_to_empty_string($decoded_repo_json->{subscribers_count});
-		#next if $subscribers_count < 3;
-		#my $forks_count = null_to_empty_string($decoded_repo_json->{forks_count});
-		#next if $forks_count < 5;
-		#my $stargazers_count = null_to_empty_string($decoded_repo_json->{stargazers_count});
-		#next if $stargazers_count < 5;
+		my $watchers_count = null_to_empty_string($decoded_repo_json->{watchers_count});
+		next if $watchers_count < 5;
+		my $subscribers_count = null_to_empty_string($decoded_repo_json->{subscribers_count});
+		next if $subscribers_count < 3;
+		my $forks_count = null_to_empty_string($decoded_repo_json->{forks_count});
+		next if $forks_count < 5;
+		my $stargazers_count = null_to_empty_string($decoded_repo_json->{stargazers_count});
+		next if $stargazers_count < 5;
 		
 
 		my $id = $one_repo_info->{id};
@@ -98,13 +102,10 @@ while ($last_id < $end_id) {
 		print INFO "\t<updated_at>$updated_at</updated_at>\n";
 		print INFO "\t<clone_url>$clone_url</clone_url>\n";
 
-
-		print DOWNLOAD "$clone_url\n";
-		print REPO "$repo_url\n";
 		
+		$curl_res = `curl --insecure -i "$repo_url/languages" -u $user:$password > temp.txt`;
+		$curl_res = `more +25 temp.txt > curler_output.txt`;
 		
-		$curl_res = `curler.bat "$repo_url/languages" $user $password 25`;
-		die "Nie znaleziono pliku curler.bat" if $? > 0;
 		my $input_languages_file = "curler_output.txt";
 		open( my $input_languages_fh, "<", $input_languages_file ) || die "Can't open $input_languages_file: $!";
 		my $languages_json = join('', <$input_languages_fh>);
@@ -128,10 +129,8 @@ while ($last_id < $end_id) {
 		print INFO "\t</languages>\n";
 		
 		
-		
-		
-		$curl_res = `curler.bat "$repo_url/branches" $user $password 25`;
-		die "Nie znaleziono pliku curler.bat" if $? > 0;
+		$curl_res = `curl --insecure -i "$repo_url/branches" -u $user:$password > temp.txt`;
+		$curl_res = `more +25 temp.txt > curler_output.txt`;
 		my $input_branches_file = "curler_output.txt";
 		open( my $input_branches_fh, "<", $input_branches_file ) || die "Can't open $input_branches_file: $!";
 		my $branches_json = join('', <$input_branches_fh>);
@@ -154,9 +153,9 @@ while ($last_id < $end_id) {
 		print INFO "\t</branches>\n";
 		
 		
-		
-		$curl_res = `curler.bat "$repo_url/contributors" $user $password 26`;
-		die "Nie znaleziono pliku curler.bat" if $? > 0;
+		$curl_res = `curl --insecure -i "$repo_url/contributors" -u $user:$password > temp.txt`;
+		$curl_res = `more +26 temp.txt > curler_output.txt`;
+
 		my $input_contributors_file = "curler_output.txt";
 		open( my $input_contributors_fh, "<", $input_contributors_file ) || die "Can't open $input_contributors_file: $!";
 		my $contributors_json = join('', <$input_contributors_fh>);
@@ -179,9 +178,8 @@ while ($last_id < $end_id) {
 		print INFO "\t</contributors>\n";
 		
 		
-		
-		$curl_res = `curler.bat "$repo_url/commits" $user $password 26`;
-		die "Nie znaleziono pliku curler.bat" if $? > 0;
+		$curl_res = `curl --insecure -i "$repo_url/commits" -u $user:$password > temp.txt`;
+		$curl_res = `more +26 temp.txt > curler_output.txt`;
 		my $input_commits_file = "curler_output.txt";
 		open( my $input_commits_fh, "<", $input_commits_file ) || die "Can't open $input_commits_file: $!";
 		my $commits_json = join('', <$input_commits_fh>);
@@ -219,9 +217,8 @@ while ($last_id < $end_id) {
 			print INFO "\t\t\t<committer_email>$commit_committer_email</committer_email>\n";
 			
 			
-			
-			$curl_res = `curler.bat "$repo_url/commits/$commit_sha" $user $password 25`;
-			die "Nie znaleziono pliku curler.bat" if $? > 0;
+			$curl_res = `curl --insecure -i "$repo_url/commits/$commit_sha" -u $user:$password > temp.txt`;
+			$curl_res = `more +25 temp.txt > curler_output.txt`;
 			my $input_commit_file = "curler_output.txt";
 			open( my $input_commit_fh, "<", $input_commit_file ) || die "Can't open $input_commit_file: $!";
 			my $commit_json = join('', <$input_commit_fh>);
@@ -251,11 +248,38 @@ while ($last_id < $end_id) {
 			
 		}
 		print INFO "\t</commits>\n";
+		
+		$clone_url = join("//$user:$password@", split('//', $clone_url));
+		my $clone_res = `git clone $clone_url`;
+		rmtree(".\\$name\\.git");
+		
+		print INFO "\t<actual_files>\n";
+		
+		my $finder = File::Find::Rule->new()->start(".\\$name");
+		while( my $file = $finder->match() ){    
+		    if (-T $file) { #nie bierz binarnych
+			unless ($file =~ /^.*\.(pdf)$/i) {
+				my $content = do {
+				    local $/ = undef;
+				    open my $fh, "<", $file
+					or die "could not open $file: $!";
+				    <$fh>;
+				};
+				$content = fix_xml(null_to_empty_string($content));
+				my $basename = basename($file);
+				print INFO "\t\t<actual_file>\n";
+				print INFO "\t\t\t<filename>$basename</filename>\n";
+				print INFO "\t\t\t<content>$content</content>\n";
+				print INFO "\t\t</actual_file>\n";
+			}
+		    }
+		}
+		rmtree(".\\$name");
+		print INFO "\t</actual_files>\n";
+
 		print INFO "</repo>\n";
 		$last_id = $one_repo_info->{id};
 	}
 }
 
 close (INFO);
-close (DOWNLOAD);
-close (REPO);
