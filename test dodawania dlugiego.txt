@@ -12,13 +12,13 @@
         "email": "drzejzi@gmail.com",
         "date": "2014-04-19T15:28:09Z"
       },
-      "message": "Ma³e przepiêcie",
+      "message": "Ma³e dfgdfg",
       "tree": {
         "sha": "1be88b74a12480a75c0e9f3ba1f52b7b1a6a2a7e",
         "url": "https://api.github.com/repos/AnnaHojan/Wyszukiwarka-kodow/git/trees/1be88b74a12480a75c0e9f3ba1f52b7b1a6a2a7e"
       },
       "url": "https://api.github.com/repos/AnnaHojan/Wyszukiwarka-kodow/git/commits/e3c3f30c47fb9395a255c3019e03506709ee0909",
-      "comment_count": 0
+      "dfgdfg": 0
     },
     "url": "https://api.github.com/repos/AnnaHojan/Wyszukiwarka-kodow/commits/e3c3f30c47fb9395a255c3019e03506709ee0909",
     "html_url": "https://github.com/AnnaHojan/Wyszukiwarka-kodow/commit/e3c3f30c47fb9395a255c3019e03506709ee0909",
@@ -30,14 +30,6 @@
       "gravatar_id": "89e2548fe8a55512dd8b88b76e8e6e74",
       "url": "https://api.github.com/users/Drzejzi",
       "html_url": "https://github.com/Drzejzi",
-      "followers_url": "https://api.github.com/users/Drzejzi/followers",
-      "following_url": "https://api.github.com/users/Drzejzi/following{/other_user}",
-      "gists_url": "https://api.github.com/users/Drzejzi/gists{/gist_id}",
-      "starred_url": "https://api.github.com/users/Drzejzi/starred{/owner}{/repo}",
-      "subscriptions_url": "https://api.github.com/users/Drzejzi/subscriptions",
-      "organizations_url": "https://api.github.com/users/Drzejzi/orgs",
-      "repos_url": "https://api.github.com/users/Drzejzi/repos",
-      "events_url": "https://api.github.com/users/Drzejzi/events{/privacy}",
       "received_events_url": "https://api.github.com/users/Drzejzi/received_events",
       "type": "User",
       "site_admin": false
