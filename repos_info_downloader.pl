@@ -9,6 +9,8 @@ use JSON qw( decode_json );
 use FileHandle;
 use File::Find::Rule;
 use File::Basename;
+use LWP;
+use HTML::TreeBuilder::XPath;
 
 
 sub null_to_empty_string($) {
@@ -271,6 +273,28 @@ while ($last_id < $end_id) {
 				print INFO "\t\t\t<filename>$basename</filename>\n";
 				print INFO "\t\t\t<filename_full>$file</filename_full>\n";
 				print INFO "\t\t\t<content>$content</content>\n";
+				
+				#wyciaganie komentarzy
+				print 'Sprawdzanie komentarzy, to moze chwile potrwac...';
+				my @items = ();
+				for my $language (keys %$decoded_languages_json) {
+					my $ua = LWP::UserAgent->new();
+					my $response = $ua->post('http://pygments.appspot.com/', ['lang'=>lc($language), 'code'=>$content]);
+					my $content = $response->as_string();
+					my $tree = HTML::TreeBuilder->new_from_content($content);
+					my $i = 1;
+					while ($i <= 10) {
+					    my @new = $tree->findnodes_as_strings('//span[@class="c'.$i.'"]');
+					    last if scalar @new == 0;
+					    push @items, @new;
+					    $i++;
+					}
+					$tree->delete;
+				}
+				if (scalar @items > 0) {
+					my $all_comments = join (' ', @items);
+					print INFO "\t\t\t<comments>$all_comments</comments>\n";
+				}
 				print INFO "\t\t</actual_file>\n";
 			}
 		    }
