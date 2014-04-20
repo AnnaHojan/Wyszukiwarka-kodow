@@ -16,3 +16,12 @@ Nale¿y skopiowaæ j¹ do miejsca bêd¹cego w PATH (np. C:\Windows\system32) wraz z 
 Konto na githubie, poprzez które mo¿na crawlowaæ i nie pokazywaæ has³a do w³asnego konta:
 login: isifake
 has³o: isifake0
+
+
+Jak zainstalowaæ Pygmenta i jakiego polecenia u¿yæ do znalezienia jêzyka:
+1. Trzeba mieæ zainstalowanego pythona (bo pygment to tak naprawdê pakiet Pythona).
+2. PóŸniej trzeba zainstalowaæ program pip. http://www.pip-installer.org/en/latest/installing.html#install-pip
+3. Dodaæ do PATHa œcie¿kê do scryptów pythona, u mnie "C:\Python27\Scripts"
+4. Wywo³aæ polecenie pip install Pygments
+Teraz ju¿ mo¿na u¿ywaæ poleceñ pygmentowych. Polecenie, które zwraca jêzyk danego pliku, to: "pygmentize -N plik_z_kodem.xxx"
+Zamieszczony opis instalacji dzia³a na Windowsie, ale podejrzewam, ¿e dla Linuksa te¿ powinien dzia³aæ.

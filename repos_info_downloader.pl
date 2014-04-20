@@ -258,7 +258,11 @@ while ($last_id < $end_id) {
 		print INFO "\t<actual_files>\n";
 		
 		my $finder = File::Find::Rule->new()->start(".\\$name");
-		while( my $file = $finder->match() ){    
+		while( my $file = $finder->match() ){
+		    my $basename = basename($file);
+		    print INFO "\t\t<actual_file>\n";
+		    print INFO "\t\t\t<filename>$basename</filename>\n";
+		    print INFO "\t\t\t<filename_full>$file</filename_full>\n";
 		    if (-T $file) { #nie bierz binarnych
 			unless ($file =~ /^.*\.(pdf)$/i) {
 				my $content = do {
@@ -268,36 +272,33 @@ while ($last_id < $end_id) {
 				    <$fh>;
 				};
 				$content = fix_xml(null_to_empty_string($content));
-				my $basename = basename($file);
-				print INFO "\t\t<actual_file>\n";
-				print INFO "\t\t\t<filename>$basename</filename>\n";
-				print INFO "\t\t\t<filename_full>$file</filename_full>\n";
 				print INFO "\t\t\t<content>$content</content>\n";
 				
 				#wyciaganie komentarzy
-				print 'Sprawdzanie komentarzy, to moze chwile potrwac...';
-				my @items = ();
-				for my $language (keys %$decoded_languages_json) {
-					my $ua = LWP::UserAgent->new();
-					my $response = $ua->post('http://pygments.appspot.com/', ['lang'=>lc($language), 'code'=>$content]);
-					my $content = $response->as_string();
-					my $tree = HTML::TreeBuilder->new_from_content($content);
+				my $pygments_lang = `pygmentize -N "$file"`;
+				chomp($pygments_lang);
+				if ($pygments_lang ne 'text') {
+					$pygments_lang = fix_xml(null_to_empty_string($pygments_lang));
+					print INFO "\t\t\t<lang>$pygments_lang</lang>\n";
+					my $pygments_html = `pygmentize -f html "$file"`;
+					my $tree = HTML::TreeBuilder->new_from_content($pygments_html);
 					my $i = 1;
-					while ($i <= 10) {
+					my @items = ();
+					while ($i <= 2) {
 					    my @new = $tree->findnodes_as_strings('//span[@class="c'.$i.'"]');
 					    last if scalar @new == 0;
 					    push @items, @new;
 					    $i++;
 					}
 					$tree->delete;
+					if (scalar @items > 0) {
+						my $all_comments = join (' ', @items);
+						print INFO "\t\t\t<comments>$all_comments</comments>\n";
+					}
 				}
-				if (scalar @items > 0) {
-					my $all_comments = join (' ', @items);
-					print INFO "\t\t\t<comments>$all_comments</comments>\n";
-				}
-				print INFO "\t\t</actual_file>\n";
 			}
 		    }
+		    print INFO "\t\t</actual_file>\n";
 		}
 		rmtree(".\\$name");
 		print INFO "\t</actual_files>\n";
