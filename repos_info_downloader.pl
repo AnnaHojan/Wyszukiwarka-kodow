@@ -30,6 +30,7 @@ my ($user, $password, $last_id, $end_id) = @ARGV;
 
 
 open (INFO, '>>repos_info.xml');
+print INFO "<add>\n";
 
 while ($last_id < $end_id) {
 
@@ -94,15 +95,15 @@ while ($last_id < $end_id) {
 		my $updated_at = fix_xml(null_to_empty_string($decoded_repo_json->{updated_at}));
 		
 		my $clone_url = $decoded_repo_json->{clone_url};	
-		print INFO "<repo>\n";
-		print INFO "\t<id>$id</id>\n";
-		print INFO "\t<name>$name</name>\n";
-		print INFO "\t<description>$description\</description>n";
-		print INFO "\t<owner>$owner</owner>\n";
-		print INFO "\t<main_language>$language</main_language>\n";
-		print INFO "\t<created_at>$created_at</created_at>\n";
-		print INFO "\t<updated_at>$updated_at</updated_at>\n";
-		print INFO "\t<clone_url>$clone_url</clone_url>\n";
+		print INFO "<doc>\n";
+		print INFO "\t<field name=\"id\">$id</field>\n";
+		print INFO "\t<field name=\"name\">$name</field>\n";
+		print INFO "\t<field name=\"description\">$description</field>\n";
+		print INFO "\t<field name=\"owner\">$owner</field>\n";
+		print INFO "\t<field name=\"main_language\">$language</field>\n";
+		print INFO "\t<field name=\"created_at\">$created_at</field>\n";
+		print INFO "\t<field name=\"updated_at\">$updated_at</field>\n";
+		print INFO "\t<field name=\"url\">$repo_url</field>\n";
 
 		
 		$curl_res = `curl --insecure -i "$repo_url/languages" -u $user:$password > temp.txt`;
@@ -123,12 +124,10 @@ while ($last_id < $end_id) {
 			
 		}
 		
-		print INFO "\t<languages>\n";
 		for my $language (keys %$decoded_languages_json) {
 			$language = fix_xml($language);
-			print INFO "\t\t<language>$language</language>\n";
+			print INFO "\t<field name=\"language\">$language</field>\n";
 		}
-		print INFO "\t</languages>\n";
 		
 		
 		$curl_res = `curl --insecure -i "$repo_url/branches" -u $user:$password > temp.txt`;
@@ -147,12 +146,10 @@ while ($last_id < $end_id) {
 			print "Blad wczytywania jsona z pliku. Powod:\n$@\n";
 			
 		}
-		print INFO "\t<branches>\n";
 		for my $branches_info (@$decoded_branches_json) {
 			my $branch_name = fix_xml($branches_info->{name});
-			print INFO "\t\t<branch>$branch_name</branch>\n";
+			print INFO "\t<field name=\"branch\">$branch_name</field>\n";
 		}
-		print INFO "\t</branches>\n";
 		
 		
 		$curl_res = `curl --insecure -i "$repo_url/contributors" -u $user:$password > temp.txt`;
@@ -172,12 +169,10 @@ while ($last_id < $end_id) {
 			print "Blad wczytywania jsona z pliku. Powod:\n$@\n";
 			
 		}
-		print INFO "\t<contributors>\n";
 		for my $contributors_info (@$decoded_contributors_json) {
 			my $contrib_login = fix_xml($contributors_info->{login});
-			print INFO "\t\t<contributor>$contrib_login</contributor>\n";
+			print INFO "\t<field name=\"contributor\">$contrib_login</field>\n";
 		}
-		print INFO "\t</contributors>\n";
 		
 		
 		$curl_res = `curl --insecure -i "$repo_url/commits" -u $user:$password > temp.txt`;
@@ -196,7 +191,6 @@ while ($last_id < $end_id) {
 			print "Blad wczytywania jsona z pliku. Powod:\n$@\n";
 			
 		}
-		print INFO "\t<commits>\n";
 		for my $commits_info (@$decoded_commits_json) {
 			my $commit_sha = $commits_info->{sha};
 			my $commit_sha_print = fix_xml($commit_sha);
@@ -207,16 +201,16 @@ while ($last_id < $end_id) {
 			my $commit_committer_name = fix_xml(null_to_empty_string($commits_info->{commit}->{committer}->{name}));
 			my $commit_committer_date = fix_xml(null_to_empty_string($commits_info->{commit}->{committer}->{date}));
 			my $commit_committer_email = fix_xml(null_to_empty_string($commits_info->{commit}->{committer}->{email}));
-			
-			print INFO "\t\t<commit>\n";
-			print INFO "\t\t\t<sha>$commit_sha_print</sha>\n";
-			print INFO "\t\t\t<message>$commit_message</message>\n";
-			print INFO "\t\t\t<author_name>$commit_author_name</author_name>\n";
-			print INFO "\t\t\t<author_date>$commit_author_date</author_date>\n";
-			print INFO "\t\t\t<author_email>$commit_author_email</author_email>\n";
-			print INFO "\t\t\t<committer_name>$commit_committer_name</committer_name>\n";
-			print INFO "\t\t\t<committer_date>$commit_committer_date</committer_date>\n";
-			print INFO "\t\t\t<committer_email>$commit_committer_email</committer_email>\n";
+
+
+			print INFO "\t<field name=\"commit_sha\">$commit_sha_print</field>\n";
+			print INFO "\t<field name=\"commit_message\">$commit_message</field>\n";
+			print INFO "\t<field name=\"commit_author_name\">$commit_author_name</field>\n";
+			print INFO "\t<field name=\"commit_author_date\">$commit_author_date</field>\n";
+			print INFO "\t<field name=\"commit_author_email\">$commit_author_email</field>\n";
+			print INFO "\t<field name=\"commit_committer_name\">$commit_committer_name</field>\n";
+			print INFO "\t<field name=\"commit_committer_date\">$commit_committer_date</field>\n";
+			print INFO "\t<field name=\"commit_committer_email\">$commit_committer_email</field>\n";
 			
 			
 			$curl_res = `curl --insecure -i "$repo_url/commits/$commit_sha" -u $user:$password > temp.txt`;
@@ -235,34 +229,26 @@ while ($last_id < $end_id) {
 				print "Blad wczytywania jsona z pliku. Powod:\n$@\n";
 				
 			}
-			print INFO "\t\t\t<files>\n";
 			for my $file_info (@{$decoded_commit_json->{files}}) {
 				my $file_name = basename(fix_xml(null_to_empty_string($file_info->{filename})));
 				my $diff = fix_xml(null_to_empty_string($file_info->{patch}));
-				print INFO "\t\t\t\t<file>\n";
-				print INFO "\t\t\t\t\t<file_name>$file_name</file_name>\n";
-				print INFO "\t\t\t\t\t<diff>$diff</diff>\n";
-				print INFO "\t\t\t\t</file>\n";
-				
+				print INFO "\t<field name=\"commit_file_name\">$file_name</field>\n";
+				print INFO "\t<field name=\"commit_diff\">$diff</field>\n";
 			}
-			print INFO "\t\t\t</files>\n";
-			print INFO "\t\t</commit>\n";
 			
 		}
-		print INFO "\t</commits>\n";
 		
 		$clone_url = join("//$user:$password@", split('//', $clone_url));
 		my $clone_res = `git clone $clone_url`;
 		rmtree(".\\$name\\.git");
 		
-		print INFO "\t<actual_files>\n";
 		
 		my $finder = File::Find::Rule->new()->start(".\\$name");
 		while( my $file = $finder->match() ){
 		    my $basename = basename($file);
-		    print INFO "\t\t<actual_file>\n";
-		    print INFO "\t\t\t<filename>$basename</filename>\n";
-		    print INFO "\t\t\t<filename_full>$file</filename_full>\n";
+		    
+		    print INFO "\t<field name=\"filename\">$basename</field>\n";
+		    print INFO "\t<field name=\"filename_full\">$file</field>\n";
 		    if (-T $file) { #nie bierz binarnych
 			unless ($file =~ /^.*\.(pdf)$/i) {
 				my $content = do {
@@ -272,14 +258,13 @@ while ($last_id < $end_id) {
 				    <$fh>;
 				};
 				$content = fix_xml(null_to_empty_string($content));
-				print INFO "\t\t\t<content>$content</content>\n";
 				
 				#wyciaganie komentarzy
 				my $pygments_lang = `pygmentize -N "$file"`;
 				chomp($pygments_lang);
 				if ($pygments_lang ne 'text') {
 					$pygments_lang = fix_xml(null_to_empty_string($pygments_lang));
-					print INFO "\t\t\t<lang>$pygments_lang</lang>\n";
+					print INFO "\t<field name=\"language\">$pygments_lang</field>\n";
 					my $pygments_html = `pygmentize -f html "$file"`;
 					my $tree = HTML::TreeBuilder->new_from_content($pygments_html);
 					my $i = 1;
@@ -291,21 +276,19 @@ while ($last_id < $end_id) {
 					    $i++;
 					}
 					$tree->delete;
-					if (scalar @items > 0) {
-						my $all_comments = join (' ', @items);
-						print INFO "\t\t\t<comments>$all_comments</comments>\n";
+					for my $comm (@items) {
+						print INFO "\t<field name=\"comment\">$comm</field>\n";
 					}
 				}
 			}
 		    }
-		    print INFO "\t\t</actual_file>\n";
 		}
 		rmtree(".\\$name");
-		print INFO "\t</actual_files>\n";
 
-		print INFO "</repo>\n";
+		print INFO "</doc>\n";
 		$last_id = $one_repo_info->{id};
 	}
 }
 
+print INFO "</add>\n";
 close (INFO);
