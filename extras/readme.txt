@@ -1,27 +1,54 @@
-Skrypt repos_info_downloader.pl nale¿y uruchamiaæ podaj¹c 4 parametry:
+Skrypt repos_info_downloader.pl naleÅ¼y uruchamiaÄ‡ podajÄ…c 4 parametry:
 
 - login na GitHubie
-- has³o na GitHubie (bêdzie ca³y czas widoczne, ale co tam)
-- id repozytorium, na którym poprzednie pobieranie siê zakoñczy³o (repo o tym id nie zostanie pobrane)
-- id repozytorium na którym chcemy zakoñczyæ pobieranie (prawdopodobnie zakoñczy siê o kilka(set) repozytoriów dalej,
-	wiêc aby kontynuowaæ pobieranie, trzeba sprawdziæ ostatnie id wpisane do pliku repos_info.txt)
+- hasÅ‚o na GitHubie (bÄ™dzie caÅ‚y czas widoczne, ale co tam)
+- id repozytorium, na ktÃ³rym poprzednie pobieranie siÄ™ zakoÅ„czyÅ‚o (repo o tym id nie zostanie pobrane)
+- id repozytorium na ktÃ³rym chcemy zakoÅ„czyÄ‡ pobieranie (prawdopodobnie zakoÅ„czy siÄ™ o kilka(set) repozytoriÃ³w dalej,
+	wiÄ™c aby kontynuowaÄ‡ pobieranie, trzeba sprawdziÄ‡ ostatnie id wpisane do pliku repos_info.txt)
 
-Skrypt umo¿liwia jednoczesn¹ pracê na kilku instancjach - wyniki nale¿y ze sob¹ scaliæ.
-
-Instalka perla: http://www.activestate.com/activeperl/downloads
-Wymagane jest zainstalowanie programu curl w wersji z ssl obs³uguj¹cej po³¹czenia z https - do repo wrzucona jest wersja 64bit.
-Nale¿y skopiowaæ j¹ do miejsca bêd¹cego w PATH (np. C:\Windows\system32) wraz z do³¹czonym certyfikatem (który mo¿na zainstalowaæ, nie wiem czy jest to wymagane).
+Skrypt umoÅ¼liwia jednoczesnÄ… pracÄ™ na kilku instancjach - wyniki naleÅ¼y ze sobÄ… scaliÄ‡.
 
 
-Konto na githubie, poprzez które mo¿na crawlowaæ i nie pokazywaæ has³a do w³asnego konta:
+
+
+!!!!!!!!!!!!!!!!!!!!! ABY ODPALIÄ† SKRYPT !!!!!!!!!!!!!!!!!!!!!
+
+
+
+1. Instalka perla: http://www.activestate.com/activeperl/downloads
+
+2. Po zainstalowaniu perla trzeba doinstalowaÄ‡ 2 moduÅ‚y:
+- w konsoli wpisujemy cpan i czekamy na ukoÅ„czenie
+- w konsoli cpana wpisujemy install File::Find::Rule (z wielkich liter)
+- w konsoli cpana wpisujemy install HTML::TreeBuilder::XPath
+
+3. Wymagane jest zainstalowanie programu curl w wersji z ssl obsÅ‚ugujÄ…cej poÅ‚Ä…czenia z https - do repo wrzucona jest wersja 64bit.
+NaleÅ¼y skopiowaÄ‡ jÄ… do miejsca bÄ™dÄ…cego w PATH (np. C:\Windows\system32) wraz z doÅ‚Ä…czonym certyfikatem (ktÃ³ry moÅ¼na zainstalowaÄ‡, nie wiem czy jest to wymagane).
+
+
+
+4. Jak zainstalowaÄ‡ Pygmenta i jakiego polecenia uÅ¼yÄ‡ do znalezienia jÄ™zyka:
+	1. Trzeba mieÄ‡ zainstalowanego pythona (bo pygment to tak naprawdÄ™ pakiet Pythona).
+	2. PÃ³Åºniej trzeba zainstalowaÄ‡ program pip. http://www.pip-installer.org/en/latest/installing.html#install-pip
+	3. DodaÄ‡ do PATHa Å›cieÅ¼kÄ™ do scryptÃ³w pythona, u mnie "C:\Python27\Scripts"
+	4. WywoÅ‚aÄ‡ polecenie pip install Pygments
+Teraz juÅ¼ moÅ¼na uÅ¼ywaÄ‡ poleceÅ„ pygmentowych. Polecenie, ktÃ³re zwraca jÄ™zyk danego pliku, to: "pygmentize -N plik_z_kodem.xxx"
+Zamieszczony opis instalacji dziaÅ‚a na Windowsie, ale podejrzewam, Å¼e dla Linuksa teÅ¼ powinien dziaÅ‚aÄ‡.
+
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+Konta na githubie, poprzez ktÃ³re moÅ¼na crawlowaÄ‡ wielowÄ…tkowo (ale skrypt musi byÄ‡ w innym katalogu):
+
 login: isifake
-has³o: isifake0
+hasÅ‚o: isifake0
 
+login isifake1
+hasÅ‚o: isifake0
 
-Jak zainstalowaæ Pygmenta i jakiego polecenia u¿yæ do znalezienia jêzyka:
-1. Trzeba mieæ zainstalowanego pythona (bo pygment to tak naprawdê pakiet Pythona).
-2. PóŸniej trzeba zainstalowaæ program pip. http://www.pip-installer.org/en/latest/installing.html#install-pip
-3. Dodaæ do PATHa œcie¿kê do scryptów pythona, u mnie "C:\Python27\Scripts"
-4. Wywo³aæ polecenie pip install Pygments
-Teraz ju¿ mo¿na u¿ywaæ poleceñ pygmentowych. Polecenie, które zwraca jêzyk danego pliku, to: "pygmentize -N plik_z_kodem.xxx"
-Zamieszczony opis instalacji dzia³a na Windowsie, ale podejrzewam, ¿e dla Linuksa te¿ powinien dzia³aæ.
+login isifake2, 3, 4, 5, 6
+hasÅ‚o: isifake0
+
+ZachÄ™cam do tworzenia wÅ‚asnych, bo dla kaÅ¼dego trzeba podaÄ‡ unikalny email.
