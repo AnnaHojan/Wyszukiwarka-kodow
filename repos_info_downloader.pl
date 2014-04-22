@@ -277,6 +277,7 @@ while ($last_id < $end_id) {
 					}
 					$tree->delete;
 					for my $comm (@items) {
+						$comm = fix_xml(null_to_empty_string($comm));
 						print INFO "\t<field name=\"comment\">$comm</field>\n";
 					}
 				}
