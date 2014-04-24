@@ -1,0 +1,69 @@
+<add>
+
+<!-- dokument do zaindeksowania przez solra
+commiter/contributor może mieć wiele wartości,
+tak samo jak plik_jezyk, plik_kod, plik_nazwa, plik_komentarz (nieobowiązkowe pole), commit_tresc,
+commit_autor, commit_data. Dzięki temu można dodać kilka commiterów, kilka komentarzy, kilka plików itd
+
+Informacje o języku, nazwie, komenterza pliku nie są sparowane ze sobą, czyli nie będzie można ich łączyć
+i na przykład podawać informacji w którym pliku znajduje się taki fragment kodu. Solr nie umożliwia czegoś takiego
+Znaczy to też, że nieważana jest kolejność tych pól,  ja pogrupowałam tylko, żeby było przejrzyście
+
+Język kodu nie jest związany z plikiem, jeśli język pliku nie jest rozpozanwany przez pygments, ale
+wyciągany z informacji o repo (nie wiem jak jest teraz) to dodajemy pola "plik_jezyk" niezaleznie od plikow
+
+-->
+<doc>
+    <field name="nazwa_repo">Wyszukiwarka-kodow</field>
+    <field name="owner">AnnaHojan</field>
+    <field name="url">https://github.com/AnnaHojan/Wyszukiwarka-kodow</field>
+    <field name="created_at">2007-10-29T14:37:16Z</field>
+    <field name="updated_at">2014-03-03T11:19:13Z</field> 
+    <field name="opis">Opis repozytorium</field>     
+
+    <field name="commiter">AnnaHojan</field>
+    <field name="commiter">Drzejzi</field>
+    <field name="commiter">magdalenka</field>
+
+    <field name="plik_jezyk">perl</field>
+    <field name="plik_kod">#!/usr/bin/perl
+
+            use File::Path qw( rmtree );
+
+            use strict;
+            use warnings;
+    </field>
+    <field name="plik_nazwa">pobieranie_repo.sh</field>
+    <field name="plik_jezyk">bash</field>
+    <field name="plik_kod">#!/bin/sh
+            for i in $(seq 1 10)
+            do
+            adres_url=`sed -n 1p to_download.txt`
+            echo $adres_url
+
+            wget --no-check-certificate $adres_url -O jsony_git/out$i.json
+            done
+            #sztuczny komentarz
+            for plik in jsony_git/*
+            do
+            echo $plik
+            clone_url=$(cat $plik | grep 'clone_url' | cut -d'"' -f4)
+            #git clone clone_url
+            done
+    </field>
+    <field name="plik_komentarz">sztuczny komentarz</field>
+    <field name="plik_komentarz">git clone clone_url</field>
+
+    <field name="commit_tresc">Raport 1</field>
+    <field name="commit_autor">Drzejzi</field>
+    <field name="commit_data">Thu Apr 3 04:24:24 2014 +0200</field>
+
+    <field name="commit_tresc">Dane do fejkowego konta</field>
+    <field name="commit_autor">Drzejzi</field>
+    <field name="commit_data">Thu Apr 3 15:18:04 2014 +0200</field>
+    
+</doc>
+
+
+
+</add>

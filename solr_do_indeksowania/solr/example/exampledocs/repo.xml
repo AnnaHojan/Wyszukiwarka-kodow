@@ -1,0 +1,22 @@
+<add>
+<doc>
+  <field name="nazwa">Wyszukiwarka-kodow</field>
+  <field name="commit">Raport 1 literówki</field>
+  <field name="komentarz">komentarz</field>
+  <field name="autor">AnnaHojan</field>
+  <field name="jezyk">perl</field>
+  <field name="kod">
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use JSON qw( decode_json );
+
+
+sub null_to_empty_string($) {
+my ($str) = @_;
+return defined $str ? $str : '';
+}</field>
+</doc>
+</add>

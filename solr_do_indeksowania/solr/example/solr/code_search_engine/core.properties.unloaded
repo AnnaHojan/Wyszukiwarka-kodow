@@ -1,0 +1,6 @@
+#Written by CorePropertiesLocator
+#Mon Apr 21 23:57:13 CEST 2014
+config=solrconfig.xml
+name=hakaton1
+schema=schema.xml
+dataDir=data

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<schema name="code_search_engine" version="1.2">
+  <types>   
+   <fieldType name="string" class="solr.StrField" sortMissingLast="true" omitNorms="true"/>
+   <fieldType name="long" class="solr.LongField" omitNorms="true"/>
+   <fieldType name="text" class="solr.TextField" positionIncrementGap="100">
+     <analyzer>
+       <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+       <filter class="solr.LowerCaseFilterFactory"/>
+     </analyzer>
+   </fieldType>
+ </types>
+ <fields>
+   <field name="_version_" type="long" indexed="true" stored="true" multiValued="false"/>
+   <field name="id" type="long" indexed="true" stored="true" required="true" />
+   <field name="name" type="string" indexed="true" stored="true" required="true" />
+   <field name="owner" type="string" indexed="true" stored="true" required="true" />
+   <field name="url" type="string" indexed="false" stored="true" required="true" />
+   <field name="main_language" type="string" indexed="true" stored="true" required="false" multiValued="true"/>
+   <field name="created_at" type="string" indexed="false" stored="true" required="true" />
+   <field name="updated_at" type="string" indexed="false" stored="true" required="true" />
+   <field name="description" type="text" indexed="true" stored="true" required="true" />
+   <field name="branch" type="string" indexed="false" stored="true" required="true" multiValued="true"/>
+
+   <field name="language" type="string" indexed="true" stored="true" required="false" multiValued="true"/>
+
+   <field name="contributor" type="string" indexed="true" stored="true" required="false" multiValued="true"/>
+    
+
+    <field name="commit_author_email" type="string" indexed="false" stored="true" required="fasle" multiValued="true"/>
+    <field name="commit_committer_name" type="string" indexed="false" stored="true" required="fasle" multiValued="true"/>
+    <field name="commit_committer_email" type="string" indexed="false" stored="true" required="fasle" multiValued="true"/>
+   
+    <field name="commit_sha" type="string" indexed="false" stored="true" required="fasle" multiValued="true"/>
+
+   <field name="commit_file_name" type="string" indexed="true" stored="true" required="fasle" multiValued="true"/>
+
+   <field name="commit_diff" type="text" indexed="true" stored="true" required="false" multiValued="true"/>
+   <field name="comment" type="text" indexed="true" stored="true" required="false" multiValued="true"/>
+   
+   <field name="commit_message" type="text" indexed="true" stored="true" required="false" multiValued="true"/>
+   <field name="commit_author_name" type="string" indexed="true" stored="true" required="false" multiValued="true"/>
+   <field name="commit_author_date" type="string" indexed="false" stored="true" required="false" multiValued="true"/>
+   <field name="commit_committer_date" type="string" indexed="false" stored="true" required="false" multiValued="true"/>
+
+   <field name="filename" type="string" indexed="true" stored="true" required="fasle" multiValued="true"/>
+   <field name="filename_full" type="string" indexed="true" stored="true" required="fasle" multiValued="true"/>
+
+
+ </fields>
+ <uniqueKey>id</uniqueKey>
+ <defaultSearchField>name</defaultSearchField>
+ <solrQueryParser defaultOperator="AND"/>
+</schema>
